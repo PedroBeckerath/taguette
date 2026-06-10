@@ -1,12 +1,12 @@
-Taguette — Modified Fork
-------------------------
+Taguette Modified Fork
+======================
 
 This is a modified fork of `Taguette <https://github.com/remram44/taguette>`__, a free and open source qualitative research tool.
 
 The modifications were developed as part of an undergraduate technological innovation research project at UFBA, focused on improving usability and supporting qualitative research workflows.
 
-Features Added
-^^^^^^^^^^^^^^
+My Contributions
+----------------
 
 Highlights Report by Document
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -23,9 +23,9 @@ The report provides:
 Technical changes:
 
 * Added a new route (``/project/<id>/highlights-report``)
-* Implemented backend report generation using SQLAlchemy queries
-* Created a dedicated HTTP handler
-* Added a new report interface integrated into the project page
+* Implemented report generation using SQLAlchemy queries
+* Created a dedicated Tornado request handler
+* Added a report page accessible from the project interface
 
 Main modified files:
 
@@ -49,7 +49,7 @@ Main modified files:
 * ``taguette/templates/base.html``
 
 Technologies Used
-^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~
 
 * Python
 * SQLAlchemy
