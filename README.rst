@@ -1,7 +1,7 @@
 Taguette — Modified Fork
-----------------
+------------------------
 
-This is a modified fork of [Taguette](https://github.com/remram44/taguette), a free and open source qualitative research tool.
+This is a modified fork of `Taguette <https://github.com/remram44/taguette>`__, a free and open source qualitative research tool.
 
 The modifications were developed as part of an undergraduate technological innovation research project at UFBA, focused on improving usability and supporting qualitative research workflows.
 
