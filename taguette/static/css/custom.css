@@ -1,3 +1,211 @@
+/* Default theme */
+:root {
+  --background-color: white;
+  --text-color: black;
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+  --background-color: #1a1a1f;
+  --text-color: #e0e0e0;
+}
+
+/* Dark theme - List Groups */
+[data-theme="dark"] .list-group {
+  background-color: #1a1a1f;
+}
+
+[data-theme="dark"] .list-group-item {
+  background-color: #1a1a1f !important;
+  color: #e0e0e0 !important;
+  border-color: #444 !important;
+}
+
+[data-theme="dark"] .list-group-item:hover {
+  background-color: #212127 !important;
+}
+
+[data-theme="dark"] .list-group-item.active {
+  background-color: #1a4a5a !important;
+  border-color: #1a4a5a !important;
+}
+
+[data-theme="dark"] .list-group-item-primary {
+  background-color: #1a2b3d !important;
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .list-group-item-primary a {
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] li.document-link-current {
+  background-color: #1a4a5a !important;
+}
+
+/* Dark theme - modals */
+[data-theme="dark"] .modal-content {
+  background-color: transparent !important;
+  color: #e0e0e0 !important;
+  border-color: #444 !important;
+}
+
+[data-theme="dark"] .modal-header {
+  background-color: #2d2d2d !important;
+  color: #e0e0e0 !important;
+  border-bottom-color: #444 !important;
+}
+
+[data-theme="dark"] .modal-body {
+  background-color: #2d2d2d !important;
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .modal-footer {
+  background-color: #2d2d2d !important;
+  border-top-color: #444 !important;
+}
+
+[data-theme="dark"] .modal-title {
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .close {
+  color: #e0e0e0 !important;
+  opacity: 0.8;
+}
+
+[data-theme="dark"] .close:hover {
+  color: #fff !important;
+  opacity: 1;
+}
+
+/* Dark theme - inside modal */
+[data-theme="dark"] .modal .form-control {
+  background-color: #3d3d3d !important;
+  color: #e0e0e0 !important;
+  border-color: #555 !important;
+}
+
+[data-theme="dark"] .modal .form-control:focus {
+  background-color: #3d3d3d !important;
+  color: #e0e0e0 !important;
+  border-color: #125368 !important;
+  box-shadow: 0 0 0 0.2rem rgba(18, 83, 104, 0.25) !important;
+}
+
+/* Dark theme - nav-tabs */
+[data-theme="dark"] .nav-tabs {
+  border-bottom-color: #444 !important;
+}
+
+[data-theme="dark"] .nav-tabs .nav-link {
+  background-color: #1a1a1f !important;
+  color: #e0e0e0 !important;
+  border-color: #444 !important;
+}
+
+[data-theme="dark"] .nav-tabs .nav-link:hover {
+  background-color: #3d3d3d !important;
+  color: #e0e0e0 !important;
+  border-color: #555 !important;
+}
+
+[data-theme="dark"] .nav-tabs .nav-link.active {
+  background-color: #125368 !important;
+  color: #fff !important;
+  border-color: #125368 #125368 transparent !important;
+}
+
+[data-theme="dark"] .nav-tabs .nav-link.active:hover {
+  background-color: #125368 !important;
+  color: #fff !important;
+}
+
+/* Dark theme - nav-pills */
+[data-theme="dark"] .nav-pills .nav-link {
+  background-color: #2d2d2d !important;
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .nav-pills .nav-link.active {
+  background-color: #125368 !important;
+  color: #fff !important;
+}
+
+/* Dark theme - form-control */
+[data-theme="dark"] .form-control {
+  background-color: #1a1a1f !important;
+  color: #e0e0e0 !important;
+  border-color: #555 !important;
+}
+
+[data-theme="dark"] .form-control::placeholder {
+  color: #aaa !important;
+}
+
+
+/* Private notes default theme */
+.private-notes {
+  border: 1px solid #ccc;
+  padding: 1em;
+  margin: 1em 0;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.private-notes textarea {
+  width: 100%;
+  height: 150px;
+  font-family: monospace;
+  padding: 0.5em;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+.note-status {
+  font-size: 0.85em;
+  color: #555;
+  margin-top: 0.5em;
+}
+
+
+/* Private notes dark theme */
+[data-theme="dark"] .private-notes {
+  border: 1px solid #ccc;
+  padding: 1em;
+  margin: 1em 0;
+  border-radius: 8px;
+  background-color: #15151a;
+}
+
+[data-theme="dark"] .private-notes textarea {
+  width: 100%;
+  height: 150px;
+  font-family: monospace;
+  padding: 0.5em;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  resize: vertical;
+  background-color: #1a1a1f;
+}
+
+[data-theme="dark"] #private-note {
+  color: white;
+}
+
+[data-theme="dark"] .note-status {
+  font-size: 0.85em;
+  color: #555;
+  margin-top: 0.5em;
+}
+
+#private-notes.hidden {
+  display: none;
+}
+
+
 /* Add Taguette font */
 @font-face {
   font-family: BadScript;
@@ -26,6 +234,8 @@
 body {
   font-family: Montserrat !important;
   font-size:1.11em !important;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 /* Some space before content */

@@ -136,6 +136,12 @@ def make_app(config, debug=False, xsrf_cookies=True):
         UnbakedURLSpec('/project/([0-9]+)/highlights/.*', views.Project,
                        name='project_tag'),
 
+
+        UnbakedURLSpec('/project/([0-9]+)/highlights-report', 
+               views.HighlightsReportHandler,
+               name='highlights_report'),
+
+
         # Export options
         UnbakedURLSpec('/project/([0-9]+)/export/project\\.sqlite3',
                        export.ExportSqlite, name='export_project_sqlite'),

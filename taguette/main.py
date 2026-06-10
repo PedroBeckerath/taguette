@@ -433,9 +433,8 @@ def main():
 
     if args.browser and not args.debug:
         loop.call_later(0.01, webbrowser.open, url)
-
     loop.start()
-
+    
 
 if __name__ == '__main__':
     main()

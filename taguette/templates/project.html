@@ -11,7 +11,8 @@
   <div class="col-md-3">
     <div class="sticky-top">
       <!-- Tab selector -->
-      <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <div class="d-flex justify-content-between align-items-end">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
           <a class="nav-link" id="project-tab" data-toggle="tab" href="#project" role="tab" aria-controls="project" aria-selected="true">{# TRANSLATORS: Left pane tab, keep short #}{% trans "tab" %}Project info{% endtrans %}</a>
         </li>
@@ -22,6 +23,10 @@
           <a class="nav-link" id="tags-tab" data-toggle="tab" href="#tags" role="tab" aria-controls="tags" aria-selected="false">{# TRANSLATORS: Left pane tab, keep short #}{% trans "tab" %}Highlights{% endtrans %}</a>
         </li>
       </ul>
+        <a class="btn btn-sm btn-secondary" href="/project/{{ project.id }}/highlights-report" target="_blank">
+          Report
+        </a>
+      </div>
 
       <div class="tab-content" id="myTabContent">
 

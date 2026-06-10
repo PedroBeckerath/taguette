@@ -767,3 +767,246 @@ class Project(BaseHandler):
             can_import_codebook=can_import_codebook,
             can_delete_project=can_delete_project,
         )
+
+#Highlights report
+
+class HighlightsReportHandler(BaseHandler):
+    @authenticated
+    async def get(self, project_id):
+        try:
+            project_id = int(project_id)
+            
+            project, privileges = self.get_project(project_id)
+            
+            report_data = generate_highlights_by_file_report(
+                self.db, project_id
+            )
+            
+            html_report = create_highlights_report_html(report_data)
+            
+            self.set_header("Content-Type", "text/html; charset=utf-8")
+            await self.finish(html_report)
+            
+        except Exception as e:
+            self.set_status(500)
+            await self.finish("Error generating report")
+
+    
+def generate_highlights_by_file_report(db, project_id):
+    try:
+        from .. import database
+        
+        #Search documents
+        documents = db.query(database.Document).filter(
+            database.Document.project_id == project_id
+        ).all()
+        
+        report_data = {}
+        
+        for doc in documents:
+            display_name = doc.name or doc.filename
+            
+            #Search highlights
+            highlights_with_tags = db.query(
+                database.Highlight,
+                database.Tag
+            ).join(
+                database.Tag,
+                database.Highlight.tags
+            ).filter(
+                database.Highlight.document_id == doc.id
+            ).all()
+            
+            #Count tags
+            tag_counts = {}
+            for highlight, tag in highlights_with_tags:
+                tag_name = tag.path
+                if tag_name in tag_counts:
+                    tag_counts[tag_name] += 1
+                else:
+                    tag_counts[tag_name] = 1
+            
+            #Search total highlights
+            total_highlights = db.query(database.Highlight).filter(
+                database.Highlight.document_id == doc.id
+            ).count()
+            
+            report_data[display_name] = {
+                'document_id': doc.id,
+                'filename': doc.filename,
+                'total_highlights': total_highlights,
+                'tags_used': tag_counts,
+                'total_tags_applied': sum(tag_counts.values()),
+                'unique_tags_count': len(tag_counts)
+            }
+        
+        return report_data
+        
+    except Exception as e:
+        import logging
+        import traceback
+        logging.error(f"Error generating report: {str(e)}")
+        logging.error(f"Traceback: {traceback.format_exc()}")
+        raise Exception(f"Erro generating report: {str(e)}")
+
+
+def create_highlights_report_html(report_data):
+    
+    html = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Highlight Report</title>
+        <style>
+            body { 
+                font-family: Arial, sans-serif; 
+                margin: 20px; 
+                background-color: #fff;
+            }
+            .container {
+                max-width: 800px;
+                margin: 0 auto;
+                background-color: white;
+                padding: 30px;
+                border: 1px solid #ddd;
+            }
+            h1 {
+                color: #333;
+                text-align: center;
+                margin-bottom: 30px;
+            }
+            .file-section { 
+                margin-bottom: 25px; 
+                border: 1px solid #ccc; 
+                padding: 20px; 
+                background-color: #f9f9f9;
+            }
+            .file-title { 
+                font-size: 18px; 
+                font-weight: bold; 
+                color: #333; 
+                margin-bottom: 15px;
+                border-bottom: 1px solid #ddd;
+                padding-bottom: 8px;
+            }
+            .stats { 
+                background-color: white;
+                color: #379adc;
+                padding: 10px;
+                margin-bottom: 15px;
+                font-weight: bold;
+                border: 1px solid #ccc;
+            }
+            .tags-section {
+                margin-top: 15px;
+            }
+            .tags-title {
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 10px;
+            }
+            .tag-item { 
+                display: inline-block; 
+                margin: 3px 8px 3px 0; 
+                padding: 6px 12px; 
+                font-size: 13px; 
+                background-color: #e7f2ff;
+                border: 1px solid #ccc;
+                color: #333;
+                font-weight: 500;
+            }
+            .tag-count {
+                background-color: #3498db;
+                color: white;
+                padding: 2px 6px;
+                border-radius: 50%;
+                font-size: 11px;
+                margin-left: 5px;
+            }
+            .no-highlights { 
+                color: #666; 
+                font-style: italic; 
+                text-align: center;
+                padding: 20px;
+                background-color: #f0f0f0;
+                border: 1px solid #ccc;
+            }
+            .summary {
+                background-color: #125368;
+                color: white;
+                padding: 15px;
+                margin-bottom: 20px;
+                text-align: center;
+                font-weight: bold;
+                border: 1px solid #ccc;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Highlight Report</h1>
+    """
+    
+    if not report_data:
+        html += "<p class='no-highlights'>No highlights found.</p>"
+    else:
+        #Totals
+        total_files = len(report_data)
+        total_highlights_all = sum(file_data['total_highlights'] for file_data in report_data.values())
+        
+        #Count unique tags
+        all_unique_tags = set()
+        for file_data in report_data.values():
+            all_unique_tags.update(file_data['tags_used'].keys())
+        total_unique_tags = len(all_unique_tags)
+        
+        html += f"""
+            <div class="summary">
+                 {total_files} file(s) •  {total_highlights_all} highlight(s) •  {total_unique_tags} tag(s)
+            </div>
+        """
+        
+        for file_name, file_data in report_data.items():
+            html += f"""
+            <div class="file-section">
+                <div class="file-title">📄 {file_name}</div>
+                <div class="stats">
+                     {file_data['total_highlights']} highlight(s) • 
+                     {file_data['unique_tags_count']} tags(s)
+                </div>
+            """
+            
+            if file_data['tags_used']:
+                html += """
+                <div class="tags-section">
+                    <div class="tags-title">Tags used:</div>
+                """
+                
+                #Sort tags
+                sorted_tags = sorted(file_data['tags_used'].items(), 
+                                   key=lambda x: x[1], reverse=True)
+                
+                for tag_name, count in sorted_tags:
+                    html += f"""
+                    <span class="tag-item">
+                        {tag_name}
+                        <span class="tag-count">{count}</span>
+                    </span>
+                    """
+                
+                html += "</div>"
+            else:
+                if file_data['total_highlights'] > 0:
+                    html += "<p style='color: #f39c12; font-style: italic;'>Highlights without tags</p>"
+                else:
+                    html += "<p class='no-highlights'>No highlights found</p>"
+            
+            html += "</div>"
+    
+    html += """
+        </div>
+    </body>
+    </html>
+    """
+    
+    return html

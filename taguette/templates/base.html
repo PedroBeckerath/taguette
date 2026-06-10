@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 {% set fluid = False %}
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="Description" content="Free and open source qualitative research tool">
-    <link rel="stylesheet" href="{{ static_url('css/custom.css') }}">
-    <link rel="stylesheet" href="{{ static_url('css/fa-all.min.css') }}">
     <link rel="stylesheet" href="{{ static_url('css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ static_url('css/fa-all.min.css') }}">
+    <link rel="stylesheet" href="{{ static_url('css/custom.css') }}">
     <title>{% block title %}Taguette{% endblock %}</title>
     <script type="text/javascript">
       var base_path = '{{ base_path }}';
@@ -21,6 +21,11 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbar">
+          <!-- Change theme button -->
+          <button id="toggle-theme" class="btn btn-outline-light ml-3" type="button" title="Change Theme">
+            Change Theme
+          </button>
+
           <ul class="navbar-nav t-me-auto">
             <li class="nav-item">
               <a class="nav-link {{ 'active' if active_page == 'index' else '' }}" href="{{ reverse_url('index') }}">{% trans "navigation item" %}Home{% endtrans %}</a>
@@ -78,7 +83,74 @@
     <script src="{{ static_url('js/jquery-3.7.1.min.js') }}"></script>
     <script src="{{ static_url('js/bootstrap.bundle.min.js') }}"></script>
 
+    <script>
+
+      // Change theme func
+      document.getElementById('toggle-theme').addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('taguette-theme', newTheme);
+      });
+
+      // Same theme on every page
+      window.addEventListener('DOMContentLoaded', () => {
+        const savedTheme = localStorage.getItem('taguette-theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      });
+    </script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const notes = document.getElementById('private-notes');
+        const btn = document.getElementById('toggle-notes');
+
+        // Hidden default
+        if (notes.classList.contains('hidden')) {
+          btn.textContent = 'Show Annotations';
+        } else {
+          btn.textContent = 'Hide Annotations';
+        }
+
+        btn.addEventListener('click', function() {
+          notes.classList.toggle('hidden');
+          btn.textContent = notes.classList.contains('hidden') ? 'Show Annotations' : 'Hide Annotations';
+        });
+      });
+    </script>
+
+     <script>
+        const textarea = document.getElementById('private-note');
+        const status = document.getElementById('note-status');
+        const noteKey = 'taguette-private-note';
+
+        // Load saved note
+        window.addEventListener('DOMContentLoaded', () => {
+          const saved = localStorage.getItem(noteKey);
+          if (saved) {
+            textarea.value = saved;
+          }
+        });
+
+        // Save after input
+        textarea.addEventListener('input', () => {
+          localStorage.setItem(noteKey, textarea.value);
+        });
+      </script> 
+    
+    <script>
+      function openHighlightsReport() {
+      const projectId = getProjectId();
+      window.open('/project/' + projectId + '/highlights-report', '_blank');
+      }
+
+      function getProjectId() {
+      return window.location.pathname.split('/')[2];
+      }
+    </script>
+
     {% block morejs %}
     {% endblock %}
   </body>
 </html>
+
